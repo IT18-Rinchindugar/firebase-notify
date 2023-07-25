@@ -1,8 +1,10 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import * as dotenv from 'dotenv';
 import notificationService from './service/notificationService.js';
 
+dotenv.config();
 const app = express();
 
 app.use(cors('*'))
@@ -25,6 +27,7 @@ app.post('/notification/webhook', (req, res) => {
   });
 });
 
-app.listen(8000, () => {
-  console.log('App listening on port 8000');
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`App listening on port ${process.env.PORT || 5000}`);
 });
+

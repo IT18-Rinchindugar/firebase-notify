@@ -26,9 +26,10 @@ app.post('/notification/webhook',
     if (result.isEmpty()) {
       const { title, text, appDeviceId, link } = req.body;
       const msg = {
-        notification: { title, body: text, click_action: 'cardoctor://' },
+        notification: { title, body: text },
         data: {
-          link: link || 'cardoctor://'
+          link: link || 'cardoctor://',
+          click_action: 'cardoctor://'
         },
       };
       notificationService.sendMultiCastPushNotification([appDeviceId], msg)

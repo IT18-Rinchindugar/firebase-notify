@@ -26,7 +26,7 @@ app.post('/notification/webhook',
     if (result.isEmpty()) {
       const { title, text, appDeviceId, link } = req.body;
       const msg = {
-        notification: { title, body: text },
+        notification: { title, body: text, click_action: 'cardoctor://' },
         data: {
           link: link || 'cardoctor://'
         },

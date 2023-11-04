@@ -30,10 +30,11 @@ app.get('/appReleases', (req, res) => {
 });
 
 app.get('/binaryRelease', (req, res) => {
+  const { version } = req.query
   res.status(200).json({
     success: true,
     data: {
-      binaryRelease,
+      binaryRelease: version === binaryVersion,
     }
   });
 });

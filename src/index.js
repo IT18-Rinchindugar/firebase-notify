@@ -4,6 +4,7 @@ import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { body, validationResult } from 'express-validator';
 import notificationService from './service/notificationService.js';
+import { appVersion, binaryRelease, binaryVersion } from './utils.js'
 
 dotenv.config();
 const app = express();
@@ -14,6 +15,27 @@ app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
   res.send('Hello Server..');
+});
+
+app.get('/appReleases', (req, res) => {
+  const { version } = req.query
+  res.status(200).json({
+    success: true,
+    data: {
+      isLatestVersion: version === appVersion || version === binaryVersion,
+      requiredUpdateIOS: true,
+      requiredUpdateAndroid: true,
+    }
+  });
+});
+
+app.get('/binaryRelease', (req, res) => {
+  res.status(200).json({
+    success: true,
+    data: {
+      binaryRelease,
+    }
+  });
 });
 
 app.post('/notification/webhook',

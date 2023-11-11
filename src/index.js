@@ -4,7 +4,7 @@ import cors from 'cors';
 import * as dotenv from 'dotenv';
 import { body, validationResult } from 'express-validator';
 import notificationService from './service/notificationService.js';
-import { appVersion, binaryRelease, binaryVersion } from './utils.js'
+import { ANDROID_APP_VERSION, ANDROID_BINARY_VERSION, appVersion, binaryRelease, binaryVersion } from './utils.js'
 
 dotenv.config();
 const app = express();
@@ -18,7 +18,21 @@ app.get('/', (req, res) => {
 });
 
 app.get('/appReleases', (req, res) => {
-  const { version } = req.query
+  const { version, platformOS } = req.query
+
+  if (platformOS === 'android') {
+    return (
+      res.status(200).json({
+        success: true,
+        data: {
+          isLatestVersion: version === ANDROID_APP_VERSION || version === ANDROID_BINARY_VERSION,
+          requiredUpdateIOS: true,
+          requiredUpdateAndroid: true,
+        }
+      })
+    )
+  }
+
   res.status(200).json({
     success: true,
     data: {
@@ -30,7 +44,19 @@ app.get('/appReleases', (req, res) => {
 });
 
 app.get('/binaryRelease', (req, res) => {
-  const { version } = req.query
+  const { version, platformOS } = req.query
+
+  if (platformOS === 'android') {
+    return (
+      res.status(200).json({
+        success: true,
+        data: {
+          binaryRelease: version === ANDROID_BINARY_VERSION,
+        }
+      })
+    )
+  }
+
   res.status(200).json({
     success: true,
     data: {
@@ -63,7 +89,7 @@ app.post('/notification/webhook',
     res.status(400).json({ errors: result.array() });
   });
 
-app.listen(process.env.PORT || 5000, () => {
+app.listen(process.env.PORT || 5001, () => {
   console.log(`App listening on port ${process.env.PORT || 5000}`);
 });
 
